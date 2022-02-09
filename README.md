@@ -1,3 +1,7 @@
+#0. комментарии и объяснения к инструкции ниже, смотреть на скорости 2x:
+
+https://drive.google.com/file/d/1AvtNNCgXAXAD4KmuqpBtGJBL_qC7DGq9/view?usp=sharing
+
 #1. способ 1
 https://prometheus-operator.dev/docs/prologue/quick-start/
 
