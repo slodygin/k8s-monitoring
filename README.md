@@ -1,4 +1,4 @@
-#0. комментарии и объяснения к инструкции ниже, смотреть на скорости 2x:
+#0. комментарии и объяснения к инструкции ниже, смотреть на скорости 1.5x:
 
 https://drive.google.com/file/d/1AvtNNCgXAXAD4KmuqpBtGJBL_qC7DGq9/view?usp=sharing
 
