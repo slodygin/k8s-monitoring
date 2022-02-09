@@ -11,7 +11,8 @@ kubectl create -f manifests/
 kubectl --namespace monitoring port-forward svc/grafana 3000
 ```
 Плюсы: много готовых дашбоардов,  prometheus-operator  развивается быстро
-Минус: нету  loki, нету  helm,  оператор сложен
+
+Минусы: нету  loki, нету  helm,  оператор сложен
 
 #2.  способ  два 
 https://grafana.com/docs/loki/latest/installation/helm/
@@ -22,6 +23,7 @@ helm upgrade --install loki grafana/loki-stack   --set fluent-bit.enabled=true,p
 ```
 
 Плюсы:  loki + fluent-bit, helm
+
 Минусы: нет готовых дашбордов
 
 #3. патчим deployment
@@ -36,7 +38,7 @@ diff -ub fluentbit_my.yaml fluentbit_orig.yaml
 #5.  проверка рег выражения
 https://grokconstructor.appspot.com/do/match
 
-4. test grok pattern
+#6. test grok pattern
 ```sh
 192.168.0.121 - - [09/Feb/2022:13:40:51 +0000] "GET / HTTP/2.0" 200 615 "-" "curl/7.74.0" 32 0.072 [default-nginx-80] [] 172.17.0.9:80 615 0.072 200 a53e962103492bdb2fc70519b366c488
 
