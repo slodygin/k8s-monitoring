@@ -1,0 +1,77 @@
+apiVersion: v1
+data:
+  fluent-bit.conf: |-
+    [SERVICE]
+        HTTP_Server    On
+        HTTP_Listen    0.0.0.0
+        HTTP_PORT      2020
+        Flush          1
+        Daemon         Off
+        Log_Level      warn
+        Parsers_File   parsers.conf
+    [INPUT]
+        Name           tail
+        Tag            kube.*
+        Path           /var/log/containers/*.log
+        Parser         docker
+        DB             /run/fluent-bit/flb_kube.db
+        Mem_Buf_Limit  5MB
+    [FILTER]
+        Name           kubernetes
+        Match          kube.*
+        Kube_URL       https://kubernetes.default.svc:443
+        Merge_Log On
+        K8S-Logging.Exclude Off
+        K8S-Logging.Parser On
+    [Output]
+        Name grafana-loki
+        Match *
+        Url http://loki:3100/api/prom/push
+        TenantID ""
+        BatchWait 1
+        BatchSize 1048576
+        Labels {job="fluent-bit"}
+        RemoveKeys kubernetes,stream
+        AutoKubernetesLabels false
+        LabelMapPath /fluent-bit/etc/labelmap.json
+        LineFormat json
+        LogLevel warn
+  labelmap.json: |-
+    {
+      "kubernetes": {
+        "container_name": "container",
+        "host": "node",
+        "labels": {
+          "app": "app",
+          "release": "release"
+        },
+        "namespace_name": "namespace",
+        "pod_name": "instance"
+      },
+      "stream": "stream"
+    }
+  parsers.conf: "[PARSER]\n    Name   nginx\n    Format regex\n    Regex ^(?<remoteAddr>[^
+    ]*) (?<the_real_ip>[^ ]*) (?<remote_user>[^ ]*) \\[(?<time_local>[^\\]]*)\\] \"(?<method>\\S+)(?:
+    +(?<request>[^\\\"]*?)(?: +\\S*)?)?\" (?<status>[^ ]*) (?<body_bytes_sent>[^ ]*)(?:
+    \"(?<httpReferer>[^\\\"]*)\" \"(?<httpUserAgent>[^\\\"]*)\")? (?<request_length>[^
+    ]*) (?<request_time>[^ ]*) \\[(?<proxy_upstream_name>[^ ]*)\\] (?<unknown1>[^
+    ]*) (?<upstream_addr>[^ ]*) (?<upstream_response_length>[^ ]*) (?<upstream_response_time>[^
+    ]*) (?<upstream_status>[^ ]*) (?<requestid>[^ ]*)$ \n    Time_Key time_local\n
+    \   Time_Format %d/%b/%Y:%H:%M:%S %z\n\n[PARSER]\n    Name        docker\n    Format
+    \     json\n    Time_Key    time\n    Time_Format %Y-%m-%dT%H:%M:%S.%L"
+kind: ConfigMap
+metadata:
+  annotations:
+    meta.helm.sh/release-name: loki
+    meta.helm.sh/release-namespace: default
+  creationTimestamp: "2022-02-08T15:14:59Z"
+  labels:
+    app: fluent-bit-loki
+    app.kubernetes.io/managed-by: Helm
+    chart: fluent-bit-2.3.0
+    heritage: Helm
+    release: loki
+  name: loki-fluent-bit-loki
+  namespace: default
+  resourceVersion: "42904"
+  uid: ee0d0569-33cb-4221-8802-ca1541420849
