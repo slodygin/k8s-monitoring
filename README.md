@@ -18,7 +18,7 @@ kubectl --namespace monitoring port-forward svc/grafana 3000
 https://grafana.com/docs/loki/latest/installation/helm/
 
 ```sh
-helm upgrade --install loki grafana/loki-stack
+helm repo add grafana https://grafana.github.io/helm-charts
 helm upgrade --install loki grafana/loki-stack   --set fluent-bit.enabled=true,promtail.enabled=false,grafana.enabled=true,prometheus.enabled=true,prometheus.alertmanager.persistentVolume.enabled=false,prometheus.server.persistentVolume.enabled=false
 ```
 
